@@ -10,13 +10,20 @@ const dummyData = {
   },
 };
 
+async function throwIfResNotOk(res: Response) {
+  if (!res.ok) {
+    const text = (await res.text()) || res.statusText;
+    throw new Error(`${res.status}: ${text}`);
+  }
+}
+
 // Unified API Request Function with Dummy Data
 export async function apiRequest<T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
   data?: unknown
 ): Promise<T> {
-  console.log(`Request method: ${method}, URL: ${url}, Data: ${JSON.stringify(data)}`);
+  console.log(`Request: ${method}, URL: ${url}, Data: ${JSON.stringify(data)}`);
   // Return dummy data instead of making an actual request
   return dummyData as unknown as T;
 }

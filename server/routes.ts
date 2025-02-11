@@ -1,25 +1,15 @@
-// import type { Express } from "express";
-// import { createServer, type Server } from "http";
-// import { storage } from "./storage";
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
 
-// export function registerRoutes(app: Express): Server {
-//   // Example route
-//   app.get("/api/health", (req, res) => {
-//     res.status(200).json({ status: "OK" });
-//   });
+export function registerRoutes(app: Express): Server {
+  // put application routes here
+  // prefix all routes with /api
 
-//   // Example CRUD operation using storage
-//   app.post("/api/user", async (req, res) => {
-//     const user = req.body;
-//     try {
-//       await storage.insertUser(user);
-//       res.status(201).json({ message: "User created successfully" });
-//     } catch (error) {
-//       res.status(500).json({ message: "Internal Server Error" });
-//     }
-//   });
+  // use storage to perform CRUD operations on the storage interface
+  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
 
-//   const httpServer = createServer(app);
+  const httpServer = createServer(app);
 
-//   return httpServer;
-// }
+  return httpServer;
+}
