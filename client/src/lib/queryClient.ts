@@ -1,27 +1,24 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-async function throwIfResNotOk(res: Response) {
-  if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
-  }
-}
+// Dummy data for demonstration purposes
+const dummyData = {
+  message: "This is dummy data",
+  data: {
+    id: 1,
+    name: "John Doe",
+    email: "john.doe@example.com",
+  },
+};
 
-// Unified API Request Function
+// Unified API Request Function with Dummy Data
 export async function apiRequest<T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
   data?: unknown
 ): Promise<T> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
-
-  await throwIfResNotOk(res);
-  return res.json() as Promise<T>;
+  console.log(`Request method: ${method}, URL: ${url}, Data: ${JSON.stringify(data)}`);
+  // Return dummy data instead of making an actual request
+  return dummyData as unknown as T;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
@@ -30,16 +27,9 @@ export const getQueryFn =
   <T>({ on401 }: { on401: UnauthorizedBehavior }): QueryFunction<T> =>
   async ({ queryKey }) => {
     const url = queryKey[0] as string;
-    const res = await fetch(url, {
-      credentials: "include",
-    });
-
-    if (on401 === "returnNull" && res.status === 401) {
-      return null as unknown as T;
-    }
-
-    await throwIfResNotOk(res);
-    return res.json() as Promise<T>;
+    console.log(`Fetching URL: ${url}`);
+    // Return dummy data instead of making an actual request
+    return dummyData as unknown as T;
   };
 
 // React Query Client with Default Options
