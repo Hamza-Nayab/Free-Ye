@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import { registerRoutes } from "./routes";
 import cors from "cors";
 
 const app = express();
@@ -39,12 +40,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Send Lorem Ipsum data on all requests
-app.use((req, res) => {
-  res.status(200).json({
-    message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  });
-});
+// Register API Routes
+registerRoutes(app);
 
 // Error Handling Middleware
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -52,13 +49,6 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const message = err.message || "Internal Server Error";
   res.status(status).json({ message });
 });
-
-// Vite setup for development
-if (app.get("env") === "development") {
-  import("./vite").then(({ setupVite }) => setupVite(app, null));
-} else {
-  import("./vite").then(({ serveStatic }) => serveStatic(app));
-}
 
 // Export for Vercel (No manual `server.listen()`)
 export default app;
