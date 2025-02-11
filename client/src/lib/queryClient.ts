@@ -7,11 +7,12 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-export async function apiRequest(
-  method: string,
+// Unified API Request Function
+export async function apiRequest<T>(
+  method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
+  data?: unknown
+): Promise<T> {
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
@@ -20,32 +21,32 @@ export async function apiRequest(
   });
 
   await throwIfResNotOk(res);
-  return res;
+  return res.json() as Promise<T>;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
-export const getQueryFn: <T>(options: {
-  on401: UnauthorizedBehavior;
-}) => QueryFunction<T> =
-  ({ on401: unauthorizedBehavior }) =>
+
+export const getQueryFn =
+  <T>({ on401 }: { on401: UnauthorizedBehavior }): QueryFunction<T> =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    const url = queryKey[0] as string;
+    const res = await fetch(url, {
       credentials: "include",
     });
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
+    if (on401 === "returnNull" && res.status === 401) {
+      return null as unknown as T;
     }
 
     await throwIfResNotOk(res);
-    return await res.json();
+    return res.json() as Promise<T>;
   };
 
+// React Query Client with Default Options
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
       refetchOnWindowFocus: false,
       staleTime: Infinity,
       retry: false,

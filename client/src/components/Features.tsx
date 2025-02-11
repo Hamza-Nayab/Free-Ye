@@ -11,23 +11,23 @@ const features = [
     icon: freeSpeechIcon,
     title: "Free Speech",
     description:
-      "Empowering voices in the digital age through decentralized communication",
-  },
-  {
-    icon: fam,
-    title: "Secure",
-    description:
-      "Built on blockchain technology ensuring transparency and security",
+      "Everyone has the right to express their opinions without censorship",
   },
   {
     icon: phone,
-    title: "Fast Transactions",
-    description: "Lightning-fast transfers with minimal fees",
+    title: "Security",
+    description:
+      "No ones Security should be compromised for the sake of free speech",
+  },
+  {
+    icon: fam,
+    title: "Family",
+    description: "No one's family should be threatened or stolen for their opinions",
   },
   {
     icon: serious,
-    title: "Global Community",
-    description: "Join a worldwide movement of free speech advocates",
+    title: "Legacy",
+    description: "A person's legacy should not be tarnished for their opinions",
   },
 ];
 
