@@ -1,6 +1,4 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 import cors from "cors";
 
 const app = express();
@@ -34,15 +32,19 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(logLine);
     }
   });
 
   next();
 });
 
-// Register API Routes
-registerRoutes(app);
+// Send Lorem Ipsum data on all requests
+app.use((req, res) => {
+  res.status(200).json({
+    message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  });
+});
 
 // Error Handling Middleware
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -53,9 +55,9 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 
 // Vite setup for development
 if (app.get("env") === "development") {
-  setupVite(app, null);
+  import("./vite").then(({ setupVite }) => setupVite(app, null));
 } else {
-  serveStatic(app);
+  import("./vite").then(({ serveStatic }) => serveStatic(app));
 }
 
 // Export for Vercel (No manual `server.listen()`)
